@@ -15,6 +15,8 @@ use Yii;
  */
 class ClientClient extends \yii\db\ActiveRecord
 {
+    public $phone_digital;
+
     /**
      * {@inheritdoc}
      */
@@ -30,7 +32,7 @@ class ClientClient extends \yii\db\ActiveRecord
     {
         return [
             [['first_name', 'last_name'], 'required'],
-            [['first_name', 'patronymic', 'last_name', 'age'], 'string', 'max' => 255],
+            [['first_name', 'patronymic', 'last_name', 'age', 'phone_digital'], 'string', 'max' => 255],
         ];
     }
 
@@ -45,6 +47,7 @@ class ClientClient extends \yii\db\ActiveRecord
             'patronymic' => 'Patronymic',
             'last_name' => 'Last Name',
             'age' => 'Age',
+            'phone_digital' => 'Phone Digital',
         ];
     }
 
