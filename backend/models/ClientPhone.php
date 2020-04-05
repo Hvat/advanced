@@ -44,4 +44,14 @@ class ClientPhone extends \yii\db\ActiveRecord
             'phone_digital' => 'Phone Digital',
         ];
     }
+
+    /**
+     * Gets query for [[ClientClient]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientClient()
+    {
+        return $this->hasMany(ClientClient::className(), ['id' => 'client_id']);
+    }
 }

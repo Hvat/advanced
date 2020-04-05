@@ -47,4 +47,14 @@ class ClientClient extends \yii\db\ActiveRecord
             'age' => 'Age',
         ];
     }
+
+    /**
+     * Gets query for [[ClientPhone]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getClientPhone()
+    {
+        return $this->hasOne(ClientPhone::className(), ['client_id' => 'id']);
+    }
 }
