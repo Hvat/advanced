@@ -12,7 +12,7 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
-        'rbac' => 'dektrium\rbac\RbacWebModule' ,
+        'rbac' => 'dektrium\rbac\RbacWebModule',
     ],
     'components' => [
         'request' => [
