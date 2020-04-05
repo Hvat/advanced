@@ -4,11 +4,11 @@ namespace backend\controllers;
 
 use Yii;
 use backend\models\ClientClient;
+use backend\models\ClientPhone;
 use backend\models\ClientClientSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * ClientClientController implements the CRUD actions for ClientClient model.
@@ -21,20 +21,6 @@ class ClientClientController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'rules' => [
-                    [
-                        'actions' => ['login', 'error'],
-                        'allow' => true,
-                    ],
-                    [
-                        'actions' => ['logout', 'index'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -80,13 +66,19 @@ class ClientClientController extends Controller
     public function actionCreate()
     {
         $model = new ClientClient();
+        $phone = new ClientPhone();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            $phone->client_id = $model->id;
+            if ($phone->load(Yii::$app->request->post()) && $phone->save()) {
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('create', [
             'model' => $model,
+            'phone' => $phone,
         ]);
     }
 
@@ -100,13 +92,24 @@ class ClientClientController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $phone = new ClientPhone();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->load(Yii::$app->request->post()) && $phone->load(Yii::$app->request->post())) {
+            $phone->client_id = $model->id;
+            $isValid = $model->validate();
+            $isValid = $phone->validate() && $isValid;
+            ClientPhone::deleteAll('client_id =' . $model->id);
+            if ($isValid) {
+                $model->save(false);
+                $phone->save(false);
+
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
 
         return $this->render('update', [
             'model' => $model,
+            'phone' => $phone,
         ]);
     }
 
@@ -120,6 +123,7 @@ class ClientClientController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+        ClientPhone::deleteAll('client_id =' . $id);
 
         return $this->redirect(['index']);
     }
