@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel backend\models\ClientClientSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Client Clients';
+$this->title = 'Clients';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="client-client-index">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Client Client', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Client', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'patronymic',
             'last_name',
             'age',
+            ['attribute' => 'phone', 'label' => 'Phone Digital', 'value'=>'clientPhone.phone_digital'],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -11,6 +11,7 @@ use backend\models\ClientClient;
  */
 class ClientClientSearch extends ClientClient
 {
+    public $phone;
     /**
      * {@inheritdoc}
      */
@@ -18,7 +19,7 @@ class ClientClientSearch extends ClientClient
     {
         return [
             [['id'], 'integer'],
-            [['first_name', 'patronymic', 'last_name', 'age'], 'safe'],
+            [['first_name', 'patronymic', 'last_name', 'age', 'phone'], 'safe'],
         ];
     }
 
@@ -41,12 +42,18 @@ class ClientClientSearch extends ClientClient
     public function search($params)
     {
         $query = ClientClient::find();
+        $query->joinWith(['clientPhone']);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
+
+        $dataProvider->sort->attributes['phone'] = [
+            'asc' => ['client_phone.phone_digital' => SORT_ASC],
+            'desc' => ['client_phone.phone_digital' => SORT_DESC],
+        ];
 
         $this->load($params);
 
@@ -58,13 +65,14 @@ class ClientClientSearch extends ClientClient
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'client_client.id' => $this->id,
         ]);
 
         $query->andFilterWhere(['like', 'first_name', $this->first_name])
             ->andFilterWhere(['like', 'patronymic', $this->patronymic])
             ->andFilterWhere(['like', 'last_name', $this->last_name])
-            ->andFilterWhere(['like', 'age', $this->age]);
+            ->andFilterWhere(['like', 'age', $this->age])
+            ->andFilterWhere(['like', 'client_phone.phone_digital', $this->phone]);
 
         return $dataProvider;
     }
