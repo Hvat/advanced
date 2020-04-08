@@ -38,6 +38,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
+                'site/clients' => 'client-client/index',
             ],
         ],
     ],

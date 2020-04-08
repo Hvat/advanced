@@ -30,9 +30,8 @@ class ClientClientController extends Controller
                             'allow' => true,
                         ],
                         [
-                            'actions' => ['logout', 'index', 'create', 'view', 'update'],
                             'allow' => true,
-                            'roles' => ['@'],
+                            'roles' => ['admin'],
                         ],
                     ],
                 ],
