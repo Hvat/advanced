@@ -39,7 +39,9 @@ return [
             'showScriptName' => false,
             'rules' => [
                 '/' => 'site/index',
-                'site/clients' => 'client-client/index',
+                'clients' => 'client-client/index',
+                'client/create' => 'client-client/create',
+                'client/<action:\w+>/<id:\d+>' => 'client-client/<action>',
             ],
         ],
     ],
