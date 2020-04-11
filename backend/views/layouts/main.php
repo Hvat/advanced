@@ -9,12 +9,14 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use backend\controllers\SecurityController;
 
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
+
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,60 +25,70 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
+
 <body>
-<?php $this->beginBody() ?>
+    <?php $this->beginBody() ?>
 
-<div class="wrap">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-        ['label' => 'Clients', 'url' => ['/client-client/index']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/user/security/login']];
-    } else {
-        $menuItems[] = ['label' => 'Users', 'url' => ['/user/admin/index']];
-        $menuItems[] = '<li>'
-            . Html::beginForm(['/user/security/logout'], 'post')
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout']
-            )
-            . Html::endForm()
-            . '</li>';
-    }
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => $menuItems,
-    ]);
-    NavBar::end();
-    ?>
+    <div class="wrap">
+        <?php
+        NavBar::begin([
+            'brandLabel' => 'Администрирование',
+            'brandUrl' => SecurityController::actionUrl(Yii::$app->homeUrl),
+            'options' => [
+                'class' => 'navbar-inverse navbar-fixed-top',
+            ],
+        ]);
 
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+        $menuItems = [
+            ['label' => 'Главная', 'url' => [SecurityController::actionUrl('/site/index')]],
+            ['label' => 'Клиенты', 'url' => [SecurityController::actionUrl('/client-client/index')]],
+        ];
+
+        if (Yii::$app->user->isGuest) {
+            $menuItems[] = ['label' => 'Вход', 'url' => ['/security/login']];
+        } else {
+            
+            $menuItems[] = ['label' => 'Пользователи', 'url' => ['/user/admin/index']];
+            $menuItems[] = '<li>'
+                . Html::beginForm(['/security/logout'], 'post')
+                . Html::submitButton(
+                    'Выход (' . Yii::$app->user->identity->username . ')',
+                    ['class' => 'btn btn-link logout']
+                )
+                . Html::endForm()
+                . '</li>';
+        }
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right'],
+            'items' => $menuItems,
+        ]);
+        NavBar::end();
+        ?>
+
+        <div class="container">
+            <?= Breadcrumbs::widget([
+
+                'homeLink' => [
+                    'label' => 'Главная',
+                    'url' => SecurityController::actionUrl(Yii::$app->homeUrl),
+                ],
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+            ]) ?>
+            <?= Alert::widget() ?>
+            <?= $content ?>
+        </div>
     </div>
-</div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
+    <footer class="footer">
+        <div class="container">
+            <p class="pull-left">&copy; <?= Html::encode('Администрирование') ?> <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer>
+            <p class="pull-right"><?= Yii::powered() ?></p>
+        </div>
+    </footer>
 
-<?php $this->endBody() ?>
+    <?php $this->endBody() ?>
 </body>
+
 </html>
 <?php $this->endPage() ?>
